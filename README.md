@@ -21,7 +21,48 @@ http://localhost/index.php
 
 
 
-## 02.2回目以降の起動
+## 02.DBの作成
+### データベース"task_app"の作成
+```
+create database task_app;
+```
+
+### 作業ユーザーの作成とパスワードの設定。今回はホストを指定しない
+ユーザー名: user
+PW: password
+```
+create user testuser identified by 'password';
+```
+
+### "task_app"というデータベースの全てのテーブルの操作権限を「testuser」に付与
+```
+grant all on task_app.* to testuser;
+```
+
+### データベース"task_app"に入り、テーブルの作成
+```
+create table tasks (
+    id int primary key auto_increment,
+    title varchar(255),
+    status varchar(10) default 'notyet',
+    created_at datetime,
+    updated_at datetime
+);
+```
+
+### テスト用のレコードを入れておく
+```
+insert into tasks (title, created_at, updated_at) values
+('基本技術者試験の勉強をする', now(), now()),
+('コーヒーを買う', now(), now()),
+('5kmランニングする', now(), now());
+```
+
+
+
+
+
+## 03.2回目以降のコンテナの起動と停止方法
 ### 起動中のコンテナを立ち上げる('-d'でプロセスを表示しない。私は基本これ)
 ```
 docker-compose up -d
