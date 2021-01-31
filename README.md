@@ -58,6 +58,11 @@ insert into tasks (title, created_at, updated_at) values
 ('5kmランニングする', now(), now());
 ```
 
+### データベース"task_app"に、contentsカラムを追加
+```
+ALTER TABLE tasks ADD content varchar(255);
+```
+
 
 
 
