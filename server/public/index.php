@@ -63,6 +63,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		<?php foreach ($tasks as $task): ?>
 		<?php if ($task['status'] == 'notyet'): ?>
 			<li>
+				<!-- タスク完了のリンクを追記 -->
+				<a href="done.php?id=<?php echo h($task['id']); ?>">[完了]</a>
 				<?php echo h($task['title']); ?>
 			</li>
 		<?php endif; ?>
@@ -71,6 +73,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	<hr>
 
 	<h2>完了したタスク</h2>
+	<ul>
+		<?php foreach ($tasks as $task): ?>
+		<?php if ($task['status'] == 'done'): ?>
+			<li>
+				<?php echo h($task['title']); ?>
+			</li>
+		<?php endif; ?>
+		<?php endforeach; ?>
+	</ul>
 
 </body>
 </html>
