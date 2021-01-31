@@ -16,20 +16,26 @@ $tasks = $stmt->fetchAll(PDO::FETCH_ASSOC);
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	// フォームに入力されたデータの受け取り
 	$title = $_POST['title'];
+	$content = $_POST['content'];
 
 	// エラーチェック用の配列
 	$errors = array();
 
 	// バリデーション
 	if ($title == '') {
-		$errors['title'] = 'タスク名を入力してください';
+		$errors['title'] = 'タイトルを入力してください';
+	}
+
+	if ($content == '') {
+		$errors['content'] = '内容を入力してください';
 	}
 
 	if (empty($errors)) {
 		$dbh = connectDb();
-		$sql = "insert into tasks (title, created_at,   updated_at) values (:title, now(), now())";
+		$sql = "insert into tasks (title, content, created_at, updated_at) values (:title, :content, now(), now())";
 		$stmt = $dbh->prepare($sql);
 		$stmt->bindParam(':title', $title);
+		$stmt->bindParam(':content', $content);
 		$stmt->execute();
 
 		// index.phpに戻る
@@ -52,9 +58,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 	<p>
 		<form action="" method="POST">
-			<input type="text" name="title">
+			<p>
+				<span>タイトル</span>
+				<input type="text" name="title">
+			</p>
+			<p>
+				<span>内容</span>
+				<textarea name="content"></textarea>
+			</p>
 			<input type="submit" value="追加">
-			<span style="color: red;"><?php echo h($errors['title']); ?></span>
+			<span style="color: red;"><?php echo h($errors['title']); ?> <?php echo h($errors['content']); ?></span>
 		</form>
 	</p>
 
@@ -66,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 				<a href="done.php?id=<?php echo h($task['id']); ?>">[完了]</a>
 				<a href="edit.php?id=<?php echo h($task['id']); ?>">[編集]</a>
 				<a href="delete.php?id=<?php echo h($task['id']); ?>">[削除]</a>
-				<?php echo h($task['title']); ?>
+				<b><?php echo h($task['title']); ?></b>: <?php echo h($task['content']); ?>
 			</li>
 		<?php endif; ?>
 		<?php endforeach; ?>
@@ -78,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		<?php foreach ($tasks as $task): ?>
 		<?php if ($task['status'] == 'done'): ?>
 			<li>
-				<?php echo h($task['title']); ?>
+				<b><?php echo h($task['title']); ?></b>: <?php echo h($task['content']); ?>
 			</li>
 		<?php endif; ?>
 		<?php endforeach; ?>

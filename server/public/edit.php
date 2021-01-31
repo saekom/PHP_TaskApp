@@ -21,22 +21,35 @@ $post = $stmt->fetch(PDO::FETCH_ASSOC);
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	// 受け取ったデータ
 	$title = $_POST['title'];
+	$content = $_POST['content'];
 
 	// エラーチェック用の配列
 	$errors = array();
 
 	// バリデーション
-	if ($title == $post['title']) {
-		$errors['title'] = 'タスク名が変更されていません。';
+	if ($title == '') {
+		$errors['title'] = 'タイトルを入力してください';
 	}
+	// if ($title == $post['title']) {
+	// 	$errors['title'] = 'タイトルが変更されていません';
+	// }
+
+	// バリデーション
+	if ($content == '') {
+		$errors['content'] = '内容を入力してください';
+	}
+	// if ($content == $post['content']) {
+	// 	$errors['content'] = '内容が変更されていません';
+	// }
 
 	// エラーが1つもなければレコードを更新
 	if (empty($errors)) {
 		// DBに接続
 		$dbh = connectDb();
-		$sql = "update tasks set title = :title, updated_at = now() where id = :id";
+		$sql = "update tasks set title = :title, content = :content, updated_at = now() where id = :id";
 		$stmt = $dbh->prepare($sql);
 		$stmt->bindParam(':title', $title);
+		$stmt->bindParam(':content', $content);
 		$stmt->bindParam(':id', $id);
 		$stmt->execute();
 
@@ -57,9 +70,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	<h2>タスクの編集</h2>
 	<p>
 		<form action="" method="POST">
-			<input type="text" name="title" value="<?php echo h($post['title']); ?>">
+			<p>
+				<span>タイトル</span>
+				<input type="text" name="title" value="<?php echo h($post['title']); ?>">
+			</p>
+			<p>
+				<span>内容</span>
+				<textarea name="content"><?php echo h($post['content']); ?></textarea>
+			</p>
 			<input type="submit" value="編集">
-			<span style="color:red;"><?php echo h($errors['title']); ?></span>
+			<span style="color:red;"><?php echo h($errors['title']); ?> <?php echo h($errors['content']); ?></span>
 		</form>
 	</p>
 </body>
