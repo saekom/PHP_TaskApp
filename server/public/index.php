@@ -63,8 +63,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		<?php foreach ($tasks as $task): ?>
 		<?php if ($task['status'] == 'notyet'): ?>
 			<li>
-				<!-- タスク完了のリンクを追記 -->
 				<a href="done.php?id=<?php echo h($task['id']); ?>">[完了]</a>
+				<a href="edit.php?id=<?php echo h($task['id']); ?>">[編集]</a>
 				<?php echo h($task['title']); ?>
 			</li>
 		<?php endif; ?>
