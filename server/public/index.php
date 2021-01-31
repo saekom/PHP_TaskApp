@@ -73,8 +73,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 	<h2>未完了タスク</h2>
 	<ul>
+		<?php $notyetCount = 0; ?>
 		<?php foreach ($tasks as $task): ?>
 		<?php if ($task['status'] == 'notyet'): ?>
+			<?php $notyetCount++; ?>
 			<li>
 				<a href="done.php?id=<?php echo h($task['id']); ?>">[完了]</a>
 				<a href="edit.php?id=<?php echo h($task['id']); ?>">[編集]</a>
@@ -84,18 +86,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		<?php endif; ?>
 		<?php endforeach; ?>
 	</ul>
+	<p>未完了タスク数：<?php echo $notyetCount; ?></p>
+
 	<hr>
 
 	<h2>完了したタスク</h2>
 	<ul>
+		<?php $doneCount = 0; ?>
 		<?php foreach ($tasks as $task): ?>
 		<?php if ($task['status'] == 'done'): ?>
+			<?php $doneCount++; ?>
 			<li>
 				<b><?php echo h($task['title']); ?></b>: <?php echo h($task['content']); ?>
 			</li>
 		<?php endif; ?>
 		<?php endforeach; ?>
 	</ul>
+	<p>完了タスク数：<?php echo $doneCount; ?></p>
 
 </body>
 </html>
