@@ -97,6 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		<?php if ($task['status'] == 'done'): ?>
 			<?php $doneCount++; ?>
 			<li>
+				<a href="notyet.php?id=<?php echo h($task['id']); ?>">[未完了]</a>
 				<b><?php echo h($task['title']); ?></b>: <?php echo h($task['content']); ?>
 			</li>
 		<?php endif; ?>
