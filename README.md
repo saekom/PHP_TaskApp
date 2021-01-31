@@ -63,6 +63,11 @@ insert into tasks (title, created_at, updated_at) values
 ALTER TABLE tasks ADD content varchar(255);
 ```
 
+### データベース"task_app"に、deadlineカラムを追加
+```
+ALTER TABLE tasks ADD deadline datetime;
+```
+
 
 
 

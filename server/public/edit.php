@@ -22,6 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	// 受け取ったデータ
 	$title = $_POST['title'];
 	$content = $_POST['content'];
+	$deadline = $_POST['deadline'];
 
 	// エラーチェック用の配列
 	$errors = array();
@@ -46,10 +47,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	if (empty($errors)) {
 		// DBに接続
 		$dbh = connectDb();
-		$sql = "update tasks set title = :title, content = :content, updated_at = now() where id = :id";
+		$sql = "update tasks set title = :title, content = :content, deadline = :deadline, updated_at = now() where id = :id";
 		$stmt = $dbh->prepare($sql);
 		$stmt->bindParam(':title', $title);
 		$stmt->bindParam(':content', $content);
+		$stmt->bindParam(':deadline', $deadline);
 		$stmt->bindParam(':id', $id);
 		$stmt->execute();
 
@@ -78,9 +80,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 				<span>内容</span>
 				<textarea name="content"><?php echo h($post['content']); ?></textarea>
 			</p>
+			<p>
+				<span>タスクの期日</span>
+				<?php
+					$datetime = h($post['deadline']);
+					$datetimeValue = date('Y-m-d',  strtotime($datetime));
+				?>
+				<input name="deadline" type="date" value="<?php echo $datetimeValue; ?>">	
+			</p>
 			<input type="submit" value="編集">
 			<span style="color:red;"><?php echo h($errors['title']); ?> <?php echo h($errors['content']); ?></span>
 		</form>
 	</p>
 </body>
 </html>
+

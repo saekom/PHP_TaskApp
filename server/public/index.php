@@ -17,6 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	// フォームに入力されたデータの受け取り
 	$title = $_POST['title'];
 	$content = $_POST['content'];
+	$deadline = $_POST['deadline'];
 
 	// エラーチェック用の配列
 	$errors = array();
@@ -32,10 +33,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 	if (empty($errors)) {
 		$dbh = connectDb();
-		$sql = "insert into tasks (title, content, created_at, updated_at) values (:title, :content, now(), now())";
+		$sql = "insert into tasks (title, content, deadline, created_at, updated_at) values (:title, :content, :deadline, now(), now())";
 		$stmt = $dbh->prepare($sql);
 		$stmt->bindParam(':title', $title);
 		$stmt->bindParam(':content', $content);
+		$stmt->bindParam(':deadline', $deadline);
 		$stmt->execute();
 
 		// index.phpに戻る
@@ -66,6 +68,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 				<span>内容</span>
 				<textarea name="content"></textarea>
 			</p>
+			<p>
+				<span>タスクの期日</span>
+				<input name="deadline" type="date" />	
+			</p>
 			<input type="submit" value="追加">
 			<span style="color: red;"><?php echo h($errors['title']); ?> <?php echo h($errors['content']); ?></span>
 		</form>
@@ -82,6 +88,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 				<a href="edit.php?id=<?php echo h($task['id']); ?>">[編集]</a>
 				<a href="delete.php?id=<?php echo h($task['id']); ?>">[削除]</a>
 				<b><?php echo h($task['title']); ?></b>: <?php echo h($task['content']); ?>
+				<br>
+				<?php
+					$datetime = h($task['deadline']);
+					$datetimeValue = date('Y-m-d',  strtotime($datetime));
+				?>
+				<span>タスクの期限日: <?php echo $datetimeValue; ?></span>
 			</li>
 		<?php endif; ?>
 		<?php endforeach; ?>
